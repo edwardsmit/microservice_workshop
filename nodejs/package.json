@@ -1,0 +1,7 @@
+{
+  "name": "microservice_workshop",
+  "main": "01_monitor.js",
+  "dependencies": {
+    "amqp": "^0.2.4"
+  }
+}
