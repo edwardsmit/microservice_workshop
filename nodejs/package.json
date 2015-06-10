@@ -2,7 +2,8 @@
   "name": "microservice_workshop",
   "private": true,
   "scripts": {
-    "start": "npm run monitor",
+    "start": "docker-compose up",
+    "prestart": "npm install",
     "monitor": "node 01_monitor.js",
     "needs": "node 02_needs.js"
   },

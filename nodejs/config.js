@@ -1,6 +1,6 @@
 module.exports = {
   // RabbitMQ connection
-  host: 'localhost',
+  host: 'rabbitmq',
   vhost: '/',
   login: 'guest',
   password: 'guest',

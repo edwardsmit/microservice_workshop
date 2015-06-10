@@ -1,0 +1,23 @@
+# Monitor service
+monitor:
+  build: .
+  command: nodemon --exec "npm run monitor"
+  links:
+    - rabbitmq
+  volumes:
+    - .:/usr/src/app
+
+# Needs service
+needs:
+  build: .
+  command: nodemon --exec "npm run needs"
+  links:
+    - rabbitmq
+  volumes:
+    - .:/usr/src/app
+
+# RabbitMQ with management console exposed
+rabbitmq:
+  image: rabbitmq:management
+  ports:
+    - "15672:15672"
