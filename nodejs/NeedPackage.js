@@ -1,18 +1,21 @@
 module.exports = {
   // Create a NeedPackage
   create: function __create() {
+    'use strict';
     return {
-      json_class: "RentalOfferNeed",
+      id: 170771,
+      userId: 'Edward',
       need: 'car_rental_offer',
       solutions: []
     };
   },
 
   // Add a solution to an existing NeedPackage
-  addSolution: function __addSolution(package, solution) {
+  addSolution: function __addSolution(thePackage, solution) {
+    'use strict';
     // TODO: validate solution?
-    package.solutions.push(solution);
+    thePackage.solutions.push(solution);
 
-    return package;
+    return thePackage;
   }
 };

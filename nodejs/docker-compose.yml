@@ -16,6 +16,15 @@ needs:
   volumes:
     - .:/usr/src/app
 
+# Solution service 1
+solution1:
+  build: .
+  command: nodemon --exec "npm run solution"
+  links:
+    - rabbitmq
+  volumes:
+    - .:/usr/src/app
+
 # RabbitMQ with management console exposed
 rabbitmq:
   image: rabbitmq:management

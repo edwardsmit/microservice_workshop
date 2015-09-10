@@ -5,9 +5,12 @@
     "start": "docker-compose up",
     "prestart": "npm install",
     "monitor": "node 01_monitor.js",
-    "needs": "node 02_needs.js"
+    "needs": "node 02_needs.js",
+    "solution": "node 03_solution.js"
   },
   "dependencies": {
-    "amqp": "^0.2.4"
+    "amqp": "^0.2.4",
+    "lodash": "^3.9.3",
+    "moment": "^2.10.3"
   }
 }

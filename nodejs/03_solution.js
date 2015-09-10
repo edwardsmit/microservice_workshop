@@ -1,29 +1,10 @@
 'use strict';
-var _ = require('lodash');
-var moment = require('moment');
+// var _ = require('lodash');
 var config = require('./config');
 var amqp = require('amqp');
 var connection = amqp.createConnection(config, {recover: false});
 var NeedPackage = require('./NeedPackage');
 
-var publishInterval = 5000;
-var possibleSolutions = [];
-
-function selectBestSolution(solutions) {
-  var best = Number.MAX_VALUE;
-  var beststring = 'Nobody';
-  _.forEach(solutions, function (value) {
-    if (value.value * value.likelihood < best) {
-      best = value.value * value.likelihood;
-      beststring = value.title;
-    }
-  });
-  if (best === Number.MAX_VALUE) {
-    console.log('No best solution'); // eslint-disable-line no-console
-    return;
-  }
-  console.log('Best solution from: ' + beststring + 'value: ' + best); // eslint-disable-line no-console
-}
 console.log('Opening connection to RabbitMQ host...'); // eslint-disable-line no-console
 
 connection.on('ready', function __connectionReady() {
@@ -33,17 +14,6 @@ connection.on('ready', function __connectionReady() {
   // Connect to exchange
   var myExchange = connection.exchange(config.exchangeName, config.exchange, function __exchangeReady(exchange) {
     console.log('Exchange \'' + exchange.name + '\' is open'); // eslint-disable-line no-console
-
-    // Publish a NeedPackage on a regular interval
-    setInterval(function __publisher() {
-      if (possibleSolutions.length !== 0) {
-        selectBestSolution(possibleSolutions);
-      }
-      possibleSolutions = [];
-      exchange.publish('', NeedPackage.create());
-      console.log(' [x] Published a rental offer need on the \'' + // eslint-disable-line no-console
-                  config.vhost + '\' bus at ' + moment().format('hh:mm:ss'));
-    }, publishInterval);
   });
 
   // Setup queue
@@ -67,10 +37,15 @@ connection.on('ready', function __connectionReady() {
       if (message.data) {
         message = JSON.parse(message.data.toString('utf8'));
       }
-      if (message.id === 170771 && message.need === 'car_rental_offer' &&
-          message.solutions.length !== 0) {
-        console.log('Received a solution'); // eslint-disable-line no-console
-        possibleSolutions = possibleSolutions.concat(message.solutions);
+      if (message.need === 'car_rental_offer' &&
+          message.solutions.length === 0) {
+        var solution = {
+          title: 'Edward\'s Solution',
+          value: 736,
+          likelihood: 70
+        };
+        myExchange.publish('', NeedPackage.addSolution(message, solution));
+        console.log('Published a solution for ' + message.id); // eslint-disable-line no-console
         return;
       }
       // console.log('[X] Not a message for us'); // eslint-disable-line no-console
